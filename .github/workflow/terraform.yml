@@ -23,8 +23,12 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Show directory structure
-        run: ls -R
+      
+      - name: Debug directories
+        run: |
+          pwd
+          ls -la
+          ls -la Terraform
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -33,13 +37,16 @@ jobs:
         run: sleep 10
 
       - name: Terraform Init
-        working-directory: Terraform
-        run: terraform init
+        run: |
+          cd Terraform
+          terraform init
 
       - name: Terraform Validate
-        working-directory: Terraform
-        run: terraform validate
+        run: |
+          cd Terraform
+          terraform validate
 
       - name: Terraform Plan
-        working-directory: Terraform
-        run: terraform plan
+        run: |
+          cd Terraform
+          terraform plan
