@@ -7,19 +7,17 @@ on:
       - main
 
 jobs:
-
   terraform:
-
     runs-on: ubuntu-latest
 
     services:
-
       localstack:
         image: localstack/localstack
         ports:
           - 4566:4566
         env:
           SERVICES: s3,lambda,dynamodb,apigateway,iam
+          DEBUG: 1
 
     steps:
 
@@ -33,15 +31,13 @@ jobs:
         run: sleep 10
 
       - name: Terraform Init
+        working-directory: terraform
         run: terraform init
-        working-directory: Terraform
 
       - name: Terraform Validate
+        working-directory: terraform
         run: terraform validate
-        working-directory: Terraform
 
       - name: Terraform Plan
+        working-directory: terraform
         run: terraform plan
-        working-directory: Terraform
-
-      
