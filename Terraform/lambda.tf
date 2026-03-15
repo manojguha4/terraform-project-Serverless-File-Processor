@@ -1,22 +1,35 @@
-resource "aws_lambda_function" "processor" {
+resource "aws_iam_role" "lambda_role" {
+
+  name = "lambda-role"
+
+  assume_role_policy = jsonencode({
+
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_lambda_function" "file_processor" {
 
   function_name = "file-processor"
 
-  filename = "${path.module}/../lambda/lambda.zip"
-  source_code_hash = filebase64sha256("${path.module}/../lambda/lambda.zip")
+  filename = "../lambda/lambda.zip"
 
-  runtime = "python3.11"
   handler = "handler.handler"
 
-  role = "arn:aws:iam::000000000000:role/lambda-role"
-}
+  runtime = "python3.9"
 
+  role = aws_iam_role.lambda_role.arn
 
-
-resource "aws_lambda_permission" "allow_s3" {
-  statement_id  = "AllowS3Invoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.processor.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.upload.arn
 }

@@ -9,7 +9,7 @@ provider "aws" {
   skip_requesting_account_id  = true
 
 
-  s3_use_path_style = true
+  s3_force_path_style = true
 
   endpoints {
     s3         = "http://localhost:4566"
